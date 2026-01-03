@@ -14,7 +14,7 @@ import {
   Color,
   Group,
 } from 'three';
-import { models } from '../assets';
+import { models, textures } from '../assets';
 import { loadGLBFromUrl } from '../utils/glbLoader';
 
 export type TavernSceneRef = {
@@ -208,7 +208,7 @@ const TavernScene = forwardRef<TavernSceneRef, TavernSceneProps>((_, ref) => {
     // Try to load Knight model from remote URL (downloads to cache first)
     try {
       console.log('Loading Knight from:', models.knight);
-      const model = await loadGLBFromUrl(models.knight);
+      const model = await loadGLBFromUrl(models.knight, textures.knight);
       if (model.scene) {
         model.scene.scale.set(1, 1, 1);
         model.scene.position.set(2, 0, 1.5);

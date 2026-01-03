@@ -15,7 +15,7 @@ import {
   SphereGeometry,
   Group,
 } from 'three';
-import { models } from '../assets';
+import { models, textures } from '../assets';
 import { loadGLBFromUrl } from '../utils/glbLoader';
 
 export type GameSceneRef = {
@@ -86,7 +86,7 @@ const GameScene = forwardRef<GameSceneRef, {}>((_, ref) => {
     // Load Rogue model from remote URL (downloads to cache first)
     try {
       console.log('Loading model from:', models.rogue);
-      const model = await loadGLBFromUrl(models.rogue);
+      const model = await loadGLBFromUrl(models.rogue, textures.rogue);
 
       if (model.scene) {
         model.scene.scale.set(1.2, 1.2, 1.2);

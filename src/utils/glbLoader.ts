@@ -1,5 +1,6 @@
 import { Directory, File, Paths } from 'expo-file-system';
-import { loadAsync } from 'expo-three';
+import { loadAsync, loadTextureAsync } from 'expo-three';
+import { MeshStandardMaterial, Mesh } from 'three';
 
 const GLB_CACHE_DIR = new Directory(Paths.cache, 'glb-models');
 
@@ -14,7 +15,10 @@ function getFilenameFromUrl(url: string): string {
   return parts[parts.length - 1];
 }
 
-export async function loadGLBFromUrl(url: string): Promise<any> {
+export async function loadGLBFromUrl(
+  url: string,
+  textureUrl?: string
+): Promise<any> {
   try {
     await ensureCacheDir();
 
@@ -29,8 +33,36 @@ export async function loadGLBFromUrl(url: string): Promise<any> {
       console.log(`Using cached GLB: ${filename}`);
     }
 
-    // Load from local cache
+    // Load model from local cache
     const model = await loadAsync(localFile.uri);
+
+    // If texture URL provided, load and apply it
+    if (textureUrl && model.scene) {
+      try {
+        console.log(`Loading texture from: ${textureUrl}`);
+        const texture = await loadTextureAsync({ asset: textureUrl });
+
+        model.scene.traverse((child: any) => {
+          if (child instanceof Mesh && child.material) {
+            if (child.material instanceof MeshStandardMaterial) {
+              child.material.map = texture;
+              child.material.needsUpdate = true;
+            } else if (Array.isArray(child.material)) {
+              child.material.forEach((mat: any) => {
+                if (mat instanceof MeshStandardMaterial) {
+                  mat.map = texture;
+                  mat.needsUpdate = true;
+                }
+              });
+            }
+          }
+        });
+        console.log('Texture applied successfully');
+      } catch (texError) {
+        console.warn('Failed to load texture:', texError);
+      }
+    }
+
     return model;
   } catch (error) {
     console.error('Error loading GLB:', error);
