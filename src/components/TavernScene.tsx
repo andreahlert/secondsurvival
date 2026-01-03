@@ -14,7 +14,7 @@ import {
   Color,
   Group,
 } from 'three';
-import { Asset } from 'expo-asset';
+import { models } from '../assets';
 
 export type TavernSceneRef = {
   setJoystickInput: (x: number, y: number) => void;
@@ -204,19 +204,15 @@ const TavernScene = forwardRef<TavernSceneRef, TavernSceneProps>((_, ref) => {
     characterGroup.position.set(0, 0, -3.5);
     scene.add(characterGroup);
 
-    // Try to load Knight model
+    // Try to load Knight model from remote URL
     try {
-      const asset = Asset.fromModule(require('../../../assets/characters/Knight.glb'));
-      await asset.downloadAsync();
-      
-      if (asset.localUri) {
-        const model = await loadAsync(asset.localUri);
-        if (model.scene) {
-          model.scene.scale.set(1, 1, 1);
-          model.scene.position.set(2, 0, 1.5);
-          model.scene.rotation.y = Math.PI;
-          scene.add(model.scene);
-        }
+      console.log('Loading Knight from:', models.knight);
+      const model = await loadAsync(models.knight);
+      if (model.scene) {
+        model.scene.scale.set(1, 1, 1);
+        model.scene.position.set(2, 0, 1.5);
+        model.scene.rotation.y = Math.PI;
+        scene.add(model.scene);
       }
     } catch (error) {
       console.log('Could not load Knight model, using placeholder');

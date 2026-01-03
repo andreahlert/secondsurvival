@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useImperativeHandle, forwardRef } from 'react
 import { View, StyleSheet } from 'react-native';
 import { ExpoWebGLRenderingContext, GLView } from 'expo-gl';
 import { Renderer, loadAsync } from 'expo-three';
-import { Asset } from 'expo-asset';
 import {
   Scene,
   PerspectiveCamera,
@@ -83,26 +82,21 @@ const GameScene = forwardRef<GameSceneRef, {}>((_, ref) => {
     const player = new Group();
     scene.add(player);
 
-    // Load Rogue model
+    // Load Rogue model from remote URL (Expo Go compatible)
     try {
-      const asset = Asset.fromModule(models.rogue);
-      await asset.downloadAsync();
-      
-      if (asset.localUri) {
-        console.log('Loading model from:', asset.localUri);
-        const model = await loadAsync(asset.localUri);
-        
-        if (model.scene) {
-          model.scene.scale.set(1.2, 1.2, 1.2);
-          model.scene.traverse((child: any) => {
-            if (child.isMesh) {
-              child.castShadow = true;
-              child.receiveShadow = true;
-            }
-          });
-          player.add(model.scene);
-          console.log('Rogue model loaded!');
-        }
+      console.log('Loading model from:', models.rogue);
+      const model = await loadAsync(models.rogue);
+
+      if (model.scene) {
+        model.scene.scale.set(1.2, 1.2, 1.2);
+        model.scene.traverse((child: any) => {
+          if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+          }
+        });
+        player.add(model.scene);
+        console.log('Rogue model loaded!');
       }
     } catch (error) {
       console.log('Error loading Rogue:', error);
