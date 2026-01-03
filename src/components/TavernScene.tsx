@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { ExpoWebGLRenderingContext, GLView } from 'expo-gl';
-import { Renderer, loadAsync } from 'expo-three';
+import { Renderer } from 'expo-three';
 import {
   Scene,
   PerspectiveCamera,
@@ -15,6 +15,7 @@ import {
   Group,
 } from 'three';
 import { models } from '../assets';
+import { loadGLBFromUrl } from '../utils/glbLoader';
 
 export type TavernSceneRef = {
   setJoystickInput: (x: number, y: number) => void;
@@ -204,10 +205,10 @@ const TavernScene = forwardRef<TavernSceneRef, TavernSceneProps>((_, ref) => {
     characterGroup.position.set(0, 0, -3.5);
     scene.add(characterGroup);
 
-    // Try to load Knight model from remote URL
+    // Try to load Knight model from remote URL (downloads to cache first)
     try {
       console.log('Loading Knight from:', models.knight);
-      const model = await loadAsync(models.knight);
+      const model = await loadGLBFromUrl(models.knight);
       if (model.scene) {
         model.scene.scale.set(1, 1, 1);
         model.scene.position.set(2, 0, 1.5);

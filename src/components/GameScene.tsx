@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { ExpoWebGLRenderingContext, GLView } from 'expo-gl';
-import { Renderer, loadAsync } from 'expo-three';
+import { Renderer } from 'expo-three';
 import {
   Scene,
   PerspectiveCamera,
@@ -16,6 +16,7 @@ import {
   Group,
 } from 'three';
 import { models } from '../assets';
+import { loadGLBFromUrl } from '../utils/glbLoader';
 
 export type GameSceneRef = {
   setJoystickInput: (x: number, y: number) => void;
@@ -82,10 +83,10 @@ const GameScene = forwardRef<GameSceneRef, {}>((_, ref) => {
     const player = new Group();
     scene.add(player);
 
-    // Load Rogue model from remote URL (Expo Go compatible)
+    // Load Rogue model from remote URL (downloads to cache first)
     try {
       console.log('Loading model from:', models.rogue);
-      const model = await loadAsync(models.rogue);
+      const model = await loadGLBFromUrl(models.rogue);
 
       if (model.scene) {
         model.scene.scale.set(1.2, 1.2, 1.2);
