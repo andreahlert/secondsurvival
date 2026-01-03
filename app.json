@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "Tavern & Tales",
+    "slug": "tavern-and-tales",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1a1210"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tavernandtales.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1a1210"
+      },
+      "package": "com.tavernandtales.app",
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-asset"
+    ]
+  }
+}
